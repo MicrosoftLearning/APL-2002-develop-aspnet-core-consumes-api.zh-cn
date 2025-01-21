@@ -1,24 +1,24 @@
 ---
 lab:
-  title: 练习：在 ASP.NET Core Razor Pages 中呈现 API 响应
-  module: 'Module: Render API responses in ASP.NET Core Razor Pages'
+  title: 练习：在 ASP.NET Core Blazor Web 应用中呈现 API 响应
+  module: 'Module: Render API responses in ASP.NET Core Blazor Web apps'
 ---
 
-在本练习中，了解如何将代码添加到 ASP.NET Core Razor Pages 应用程序中，以呈现 HTTP 操作的结果。 该代码已添加到 *.cshtml*文件中。 在 *.cshtml.cs* 文件中执行操作的代码已完成。
+在本练习中，了解如何将代码添加到 ASP.NET Core Blazor Web 应用中，以呈现 HTTP 的结果。 该代码已添加到 *.razor*文件中。 在 *.razor.cs* 文件中执行操作的代码已完成。
 
 ## 目标
 
 完成此练习后，你将能够：
 
-* 在应用程序中执行 Razor 关键字
-* 将 C# 代码与 Razor Pages 语法相结合
+* 在应用中实现 Razor 语法
+* 将 C# 代码与 Razor 语法相结合
 
 ## 先决条件
 
 要完成本练习，您需要在系统中安装以下设备：
 
 * [Visual Studio Code](https://code.visualstudio.com)
-* [最新的 .NET 7.0 SDK。](https://dotnet.microsoft.com/download/dotnet/7.0)
+* [最新的 .NET 8.0 SDK](https://dotnet.microsoft.com/download/dotnet/8.0)
 * Visual Studio Code 的 [C# 扩展](https://marketplace.visualstudio.com/items?itemName=ms-dotnettools.csharp)
 
 **预计练习完成时间**：30 分钟
@@ -92,53 +92,50 @@ lab:
 
 >**注意：** 请花时间查看本练习中编辑的每个文件中的代码。 这些代码都有大量注释，可以帮助你理解代码库。
 
-## 执行代码以在`Index`页面上呈现数据
+## 执行代码以在主页上呈现数据
 
 Fruit 网络应用程序会在主页上显示 API 示例数据。 您需要添加代码，以迭代由在代码后台文件中执行的 HTTP `GET`操作返回的示例数据。
 
 ### 任务 1：添加代码以在表格中呈现数据
 
-1. 在**资源管理器**窗格中选择 *Index.cshtml* 文件，打开该文件进行编辑。
+1. 在“**资源管理器**”窗格中，选择 *Home.razor* 文件，打开该文件进行编辑。
 
 1. 在 `@* Begin render API data code block *@` 和 `@* End render API data code block *@` 注释之间添加以下代码。
 
-    ```csharp
+    ```razor
     <tbody>
-        
-        @*  The Razor keyword @foreach is used to iterate through the
+        @*  The Razor explicit expression @foreach is used to iterate through the
             data returned to the data model from the HTTP operations. *@
-        @foreach (var obj in Model.FruitModels)
+        @foreach (var obj in _fruitList ?? [])
         {
             <tr>
                 @* Display the name of the fruit. *@
                 <td width="50%">@obj.name</td>
-                @*  The following if statment is a Razor code block that changes the color 
-                    and icon of the available indicator in the page rendering. *@
+                @*  The following if statment changes the true/false of instock to Yes/No. *@
                 @{
                     if (@obj.instock)
                     {
                         <td width="20%" class="text-md-center">
-                            <i class="bi bi-check-circle" style="font-size: 1rem; color: green;"></i>&nbsp;Yes
+                            Yes
                         </td>
                     }
                     else
                     {
                         <td width="20%" class="text-md-center">
-                            <i class="bi bi-dash-circle" style="font-size: 1rem; color:red;"></i>&nbsp;No
+                            No
                         </td>
                     }
                 }
                 <td width="30%" class="text-center">
-                    @*  The following div contains information to handle the edit and delete functions. *@
+                    @* The following div renders the Edit and Delete buttons that pass the Id 
+                        to a function that handles the navigation and passes the Id to the page. *@
                     <div class="w-75 btn-group btn-group-sm" role="group" style="text-align:center">
-                        @* Routes to the Edit page and passes the id of the record. *@
-                        <a asp-page="Edit" asp-route-id="@obj.id" class="btn btn-primary  mx-2">
-                            <i class="bi bi-pencil-square"></i> Edit
-                        </a>
-                        @* Routes to the Delete page and passes the id of the record. *@
-                        <a asp-page="Delete" asp-route-id="@obj.id" class="btn btn-danger mx-2">
-                            <i class="bi bi-trash"></i> Delete
-                        </a>
+                        <button class="btn btn-primary  mx-2" @onclick="() => EditButton(obj.id)">
+                            Edit
+                        </button>
+                        <button class="btn btn-danger mx-2" @onclick="() => DeleteButton(obj.id)">
+                            Delete
+                        </button>
                     </div>
                 </td>
             </tr>
@@ -146,7 +143,7 @@ Fruit 网络应用程序会在主页上显示 API 示例数据。 您需要添�
     </tbody>
     ```
 
-1. 保存对 *Index.cshtml* 的更改，并查看代码中的注释。
+1. 保存对 *Home.razor* 所做的更改，并查看代码中的注释。
 
 1. 在 Visual Studio Code 顶部菜单中选择**运行\|开始调试**，或选择 **F5**。 项目构建完成后，浏览器窗口应启动并运行网络应用程序
 
@@ -158,49 +155,48 @@ Fruit 网络应用程序会在主页上显示 API 示例数据。 您需要添�
 
     ![安装自签名证书的提示截图。](media/install-cert.png)
 
-1. 要继续练习，请关闭浏览器或浏览器选项卡，并在 Visual Studio Code 中选择**运行\|停止调试**或 **Shift + F5**。
+1. 要继续练习，请关闭浏览器或浏览器选项卡，并在 Visual Studio Code 中选择**运行 \| 停止调试** 或 **Shift + F5**。
 
-## 执行代码以处理`Add to list`功能
+## 执行代码以处理**添加到列表**功能
 
-添加、编辑和删除操作分别在项目中的单独 *.cshtml* 页面上处理。 在本节中，您将添加代码在 *Add.cshtml* 文件中创建表格，以便向列表中添加数据。
+添加、编辑和删除操作分别在项目中的单独 *.razor* 页面上处理。 在本部分中，添加代码，在 *Add.razor* 文件中创建表格，以便向列表中添加数据。
 
 ### 任务 1：添加代码以创建添加数据表单
 
-1. 在**资源管理器**窗格中选择 *Add.cshtml* 文件，打开该文件进行编辑。
+1. 在“**资源管理器**”窗格中，选择 *Add.razor* 文件，打开该文件进行编辑。
 
 1. 在 `@* Begin render Add code block *@` 和 `@* End render Add code block *@` 注释之间添加以下代码。
 
     ```csharp
-    <form method="post">
-        @*  The FruitModels.id is here so the full data model is represented on the page.
+    @* Data is added using a Razor form, the data model is bound to the form.*@
+    <EditForm OnSubmit="Submit" FormName="AddFruit" Model="_fruitList">
+        @*  The _fruitList.id is here so the full data model is represented on the page.
             The database behind the API will assign the id. *@
-        <input hidden asp-for="FruitModels.id" />
+        <InputNumber hidden="true" @bind-Value="_fruitList!.id" />
         <div class="border p-3 mt-4" style="width:50%">
             <div class="row pb-2">
                 <h2 class="text-primary pl-3">Add Fruit</h2>
                 <hr />
             </div>
             <div class="mb-3">
-                <label asp-for="FruitModels.name" class="h5"></label><br/>
+                <label class="h5"></label><br />
                 @* Empty text box for the name of the fruit to be added. *@
-                <input type="text" asp-for="FruitModels.name" />
-                <span asp-validation-for="FruitModels.name" class="text-danger"></span>
+                <InputText @bind-Value="_fruitList!.name" />
             </div>
             <div class="mb-3">
-                <label asp-for="FruitModels.instock" class="h5"></label><br/>
+                <label class="h5"></label><br />
                 @* Render the true/false instock state from the record in an editable checkbox. *@
-                <input type="checkbox" asp-for="FruitModels.instock" style="width:20px; height:20px" />
-                <label class="h7"><i class="bi bi-arrow-left"></i>  Check the box if it's available.</label>
-                <span asp-validation-for="FruitModels.instock" class="text-danger"></span>
+                <InputCheckbox @bind-Value="_fruitList!.instock" style="width:20px; height:20px" />
+                <label class="h7">Check the box if it's available.</label>
             </div>
             @* Submit the addition or return to the Index page if the Add is cancelled.*@
-            <button type="submit" class="btn btn-primary" style="width:150px;">Create</button>
-            <a asp-page="Index" class="btn btn-secondary" style="width:150px;">Cancel</a>
+            <button @onclick="() => Submit()" class="btn btn-primary" style="width:150px;">Create</button>
+            <a class="btn btn-secondary" style="width:150px;" href="/">Cancel</a>
         </div>
-    </form>
+    </EditForm>
     ```
-
-1. 保存对 *Add.cshtml* 的更改，并查看代码中的注释。
+    
+1. 保存对 *Add.razor* 的更改，并查看代码中的注释。
 
 1. 在 Visual Studio Code 顶部菜单中选择**运行\|开始调试**，或选择 **F5**。 项目构建完成后，浏览器窗口应启动并运行网络应用程序
 
@@ -212,21 +208,22 @@ Fruit 网络应用程序会在主页上显示 API 示例数据。 您需要添�
 
 1. 要继续练习，请关闭浏览器或浏览器选项卡，并在 Visual Studio Code 中选择**运行\|停止调试**或 **Shift + F5**。
 
-## 执行代码以处理`Edit`功能
+## 执行代码以处理**编辑**功能
 
-在本节中，您将添加代码，在 *Edit.cshtml* 文件中创建表格，以便在列表中编辑数据。
+在本节中，您将添加代码，在 *Edit.cshtml* 文件中创建表格，以便编辑列表中的数据。
 
 ### 任务 1：为编辑表单添加代码
 
-1. 在**资源管理器**窗格中选择 *Edit.cshtml* 文件，打开该文件进行编辑。
+1. 在“**资源管理器**”窗格中，选择 *Edit.razor* 文件，打开该文件进行编辑。
 
 1. 在 `@* Begin render Edit code block *@` 和 `@* End render Edit code block *@` 注释之间添加以下代码。
 
     ```csharp
-    <form method="post">
+    @* Data is edited using a Razor form, the data model is bound to the form.*@
+    <EditForm OnSubmit="Submit" FormName="EditFruit" Model="_fruitList">
         @*  The id for the data record is hidden because it needs to be available to the 
             code-behind processing, but it's not displayed. *@
-        <input hidden asp-for="FruitModels.id" />
+        <InputNumber hidden="true" @bind-Value="_fruitList!.id" />
         <div class="border p-3 mt-4" style="width:50%">
             <div class="row pb-2">
                 <h2 class="text-primary pl-3">Edit Fruit</h2>
@@ -234,25 +231,23 @@ Fruit 网络应用程序会在主页上显示 API 示例数据。 您需要添�
             </div>
             <div class="mb-3">
                 <label asp-for="FruitModels.name" class="h5"></label><br/>
-                @* Render the current name of the fruit in an editable text box. *@
-                <input type="text" asp-for="FruitModels.name" />
-                <span asp-validation-for="FruitModels.name" class="text-danger"></span>
+                @* Render the name of the fruit in an editable text box. *@
+                <InputText @bind-Value="_fruitList!.name" />
             </div>
             <div class="mb-3">
-                <label asp-for="FruitModels.instock" class="h5"></label><br/>
+                <label  class="h5"></label><br/>
                 @* Render the true/false instock state from the record in an editable checkbox. *@
-                <input type="checkbox" asp-for="FruitModels.instock" style="width:20px; height:20px" />
+                <InputCheckbox @bind-Value="_fruitList!.instock" style="width:20px; height:20px" />
                 <label class="h7"><i class="bi bi-arrow-left"></i>  Check the box if available.</label>
-                <span asp-validation-for="FruitModels.instock" class="text-danger"></span>
             </div>
-            @* Submit the changes or return to the Index page if the edit is cancelled.*@
-            <button type="submit" class="btn btn-primary" style="width:150px;">Update</button>
-            <a asp-page="Index" class="btn btn-secondary" style="width:150px;">Cancel</a>
+            @* Submit the changes or return to the Index page if the Edit is cancelled.*@
+            <button type="submit" class="btn btn-danger " style="width:150px;">Save</button>
+            <a class="btn btn-secondary" style="width:150px;" href="/">Cancel</a>
         </div>
-    </form>
+    </EditForm>
     ```
 
-1. 保存对 *Edit.cshtml* 的更改，并查看代码中的注释。
+1. 保存对 *Edit.razor* 的更改，并查看代码中的注释。
 
 1. 在 Visual Studio Code 顶部菜单中选择**运行\|开始调试**，或选择 **F5**。 项目构建完成后，浏览器窗口应启动并运行网络应用程序
 
@@ -264,21 +259,22 @@ Fruit 网络应用程序会在主页上显示 API 示例数据。 您需要添�
 
 1. 要继续练习，请关闭浏览器或浏览器选项卡，并在 Visual Studio Code 中选择**运行\|停止调试**或 **Shift + F5**。
 
-## 执行代码以处理`Delete`功能
+## 执行代码以处理**删除**功能
 
 在本节中，您将添加代码，在 *Delete.cshtml* 文件中创建一个表单，以便从列表中删除数据。
 
 ### 任务 1： 为删除表单添加代码
 
-1. 在**资源管理器**窗格中选择 *Delete.cshtml* 文件，打开该文件进行编辑。
+1. 在“**资源管理器**”窗格中，选择 *Delete.razor* 文件，打开该文件进行编辑。
 
 1. 在 `@* Begin render Delete code block *@` 和 `@* End render Delete code block *@` 注释之间添加以下代码。
 
     ```csharp
-    <form method="post">
-        @*  The id for the data record is hidden because it needs to be avaialable to the 
+    @* Data is deleted using a Razor form, the data model is bound to the form.*@
+    <EditForm OnSubmit="Submit" FormName="DeleteFruit" Model="_fruitList">
+        @*  The id for the data record is hidden because it needs to be available to the 
             code-behind processing, but it's not displayed. *@
-        <input hidden asp-for="FruitModels.id" />
+        <InputNumber hidden="true" @bind-Value="_fruitList!.id" />
         <div class="border p-3 mt-4" style="width:50%">
             <div class="row pb-2">
                 <h2 class="text-primary pl-3">Delete Fruit</h2>
@@ -287,23 +283,22 @@ Fruit 网络应用程序会在主页上显示 API 示例数据。 您需要添�
             <div class="mb-3">
                 <label asp-for="FruitModels.name" class="h5"></label><br/>
                 @* Render the name of the fruit in a non-editable text box. *@
-                <input type="text" asp-for="FruitModels.name" disabled/>
-                <span asp-validation-for="FruitModels.name" class="text-danger"></span>
+                <InputText @bind-Value="_fruitList!.name" Disabled/>
             </div>
             <div class="mb-3">
-                <label asp-for="FruitModels.instock" class="h5"></label><br/>
+                <label  class="h5"></label><br/>
                 @* Render the true/false instock state from the record in a non-editable checkbox. *@
-                <input type="checkbox" asp-for="FruitModels.instock" style="width:20px; height:20px" disabled  />
-                <span asp-validation-for="FruitModels.instock" class="text-danger"></span>
+                <InputCheckbox @bind-Value="_fruitList!.instock" style="width:20px; height:20px" Disabled  />
+                <label class="h7">Check the box if available.</label>
             </div>
             @* Submit the changes or return to the Index page if the delete is cancelled.*@
             <button type="submit" class="btn btn-danger " style="width:150px;">Delete</button>
-            <a asp-page="Index" class="btn btn-secondary" style="width:150px;">Cancel</a>
+            <a class="btn btn-secondary" style="width:150px;" href="/">Cancel</a>
         </div>
-    </form>
+    </EditForm>
     ```
 
-1. 保存对 *Delete.cshtml* 的更改，并查看代码中的注释。
+1. 保存对 *Delete.razor* 的更改，并查看代码中的注释。
 
 1. 在 Visual Studio Code 顶部菜单中选择**运行\|开始调试**，或选择 **F5**。 项目构建完成后，浏览器窗口应启动并运行网络应用程序
 
@@ -313,9 +308,9 @@ Fruit 网络应用程序会在主页上显示 API 示例数据。 您需要添�
 
 准备结束练习时：
 
-* 关闭浏览器或浏览器选项卡，在 Visual Studio Code 中选择**运行\|停止调试**或 **Shift + F5**。 
+* 关闭浏览器或浏览器选项卡，在 Visual Studio Code 中选择**运行 \| 停止调试** 或 **Shift + F5**。 
 
-* 在运行 Fruit API 的`Ctrl + C`终端输入停止该 API 的命令。
+* 在 Fruit API 运行的终端中输入 **Ctrl + C**，停止 Fruit API。
 
 ## 审阅
 
