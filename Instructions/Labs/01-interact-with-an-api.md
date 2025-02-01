@@ -69,7 +69,7 @@ Swagger 文档是使用 Swashbuckle 软件包创建的。
 
     ![显示 FruitAPI 项目结构的截图。](media/api-project-structure.png)
 
-1. 选择**终端**，然后选择**新建终端**，或使用键盘快捷方式 **Ctrl+Shift+'** 打开终端。
+1. 选择“**终端**”，然后选择“**新建终端**”，或使用键盘快捷方式 **Ctrl+Shift+`**，在 VS Code 中打开终端。
 
 1. 在**终端**窗格中运行以下`dotnet`命令：
 
